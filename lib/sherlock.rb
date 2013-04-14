@@ -1,7 +1,9 @@
 require "sherlock/version"
+require 'sherlock/utils/uri_utils'
 require "sherlock/inspector"
 require "sherlock/item"
 require "sherlock/client"
+
 
 module Sherlock
   class << self

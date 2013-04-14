@@ -1,9 +1,7 @@
 require 'uri'
 require 'domainatrix'
-require 'sherlock/utils/uri_utils'
+include Sherlock::Utils::URI_Utils
 
-#This is the 'Client' class. It returns basic info about a given URI
-# If it actually fetches the URI, it returns an 'Item' class
 module Sherlock
   class Inspector
 
@@ -25,48 +23,22 @@ module Sherlock
       @client  ||= Sherlock::Client.new(@uri)
     end
 
-    #Raise an error unless a valid URI
-    def validate_uri(uri)
-      if uri !~ /\:/
-        msg = "URI has no scheme (i.e. 'http', 'ftp', 'smtp')"
-      elsif uri !~ /\/\//
-        msg = "URI missing start of hierarchical segment '//'"
-      elsif !(uri =~ URI::regexp)
-        msg = "URI does not appear to be valid"
-      end
-      msg ? (raise URI::InvalidURIError, msg) : true
+    #STATUS METHODS
+    def exists?
+      
     end
 
-    #Parse params from URI, return as hash
-    def parse_uri_params(uri)
-      parsed_params = {}
-
-      possible_params = uri.split(/\?|\&/).delete_if{|x| !x.match(/\=/)}
-
-      unless possible_params.nil? || possible_params.empty?
-        possible_params.each do |prm|
-          param = prm.split(/\=/)
-          parsed_params[param[0].to_sym] = param[1]
-        end
-        return parsed_params
-      end
+    def redirected?
+      @client.status && @client.status.to_s.match(/^3[0-9]{2}/)
     end
 
-    #Parse port from the URI, otherwise nil
-    def parse_port(uri)
-      port = uri.scan(/\:[0-9]+/).first
-      port ? port.gsub(":","").to_i : nil
+    def success?
+      @client.status && @client.status.to_s.match(/^2[0-9]{2}/)
     end
 
-    def sanitize_uri(uri)
-      URI.decode(uri.to_s).downcase.strip
+    def fetched?
+      @client.fetched
     end
 
-    def update_uri_on_redirect
-      if status.redirected?
-        #update @uri with the real uri
-        p "REDIRECTED"
-      end
-    end
   end
 end

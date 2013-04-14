@@ -5,7 +5,6 @@ require 'ruby-readability'
 
 module Sherlock
 
-  attr_accessor :status,:fetched,:hteml
 
   class Item
     EXTERNAL    = %r(\.(com|edu|gov|net|biz|org)$)
@@ -14,26 +13,6 @@ module Sherlock
                         staff|people|member[s]?|course[s]?|cart|item[s]|
                         marketplace|manifesto|privacy|team|platform|
                         categor[y|ies]|author[s]?)(\/|$))
-
-    def initialize uri
-      @status  ||= nil
-      @fetched ||= false
-      @html    ||= nil
-      @text    ||= nil
-    end
-
-    #STATUS METHODS
-    def redirected?
-      @status && @status.to_s.match(/^3[0-9]{2}/)
-    end
-
-    def success?
-      @status && @status.to_s.match(/^2[0-9]{2}/)
-    end
-
-    def fetched?
-      @fetched
-    end
 
     #SELF INSPECTING METHODS
     def meta_page?
@@ -46,11 +25,6 @@ module Sherlock
 
     def file_url?
       self.url.match(FILES) ? true : false
-    end
-
-    #DECORATORS,CONVEINENCE METHODS
-    def titleize_url
-      @url.split(/\//).sort_by{|x| x.length}.last.titleize rescue ""
     end
 
     #SCRAPE/CONTENT RETRIEVAL METHODS
@@ -163,15 +137,6 @@ module Sherlock
       fetch
       if @request
         return @request.env[:url].to_s
-      end
-    end
-
-    def fetch
-      if @fetched
-        return @status
-      else
-        Sherlock::Client.new(@uri).fetch
-        @fetched = true
       end
     end
 

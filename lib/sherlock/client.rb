@@ -4,19 +4,26 @@ require 'typhoeus/adapters/faraday'
 
 module Sherlock
 
-  #this should only fetch the item and return the result + status
   class Client
 
-    attr_accessor :uri
+    SUPPORTED_REQUEST_METHODS = ['GET','HEAD','TRACE','OPTIONS']
+
+    attr_accessor :uri,:request_method
     attr_reader :status,:content,:headers,:error,:request,:fetched
 
-    def initialize uri
+    def initialize uri,request_method='get'
       @uri = uri
+      @request_method = request_method
       @status,@content,@headers,@error,@request,@fetched = nil
     end
 
     def uri=(uri)
       @uri = uri
+      fetch
+    end
+
+    def request_method=(request_method)
+      @request_method = request_method
       fetch
     end
 
@@ -39,6 +46,13 @@ module Sherlock
       @fetched = true
       return self
     end
+
+    # def update_uri_on_redirect
+    #   if status.redirected?
+    #     #update @uri with the real uri
+    #     p "REDIRECTED"
+    #   end
+    # end
 
   end
 

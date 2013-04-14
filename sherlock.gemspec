@@ -12,20 +12,21 @@ Gem::Specification.new do |gem|
   gem.summary       = %q{Sherlock will extract just about any information from a given URI}
   gem.homepage      = "http://mauled.by.bears"
 
-  gem.files         = `git ls-files`.split($/)
+  gem.files += Dir.glob("lib/**/*.rb")
+  gem.files += Dir.glob("spec/**/*")
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
 
   #DEPENDENCIES
   # NOTE: version lock these ASAP
-  gem.add_development_dependency 'domainatrix'
-  gem.add_development_dependency 'nokogiri'
-  gem.add_development_dependency 'ruby-readability'
-  gem.add_development_dependency 'faraday'
-  gem.add_development_dependency 'faraday_middleware'
-  gem.add_development_dependency 'typhoeus'
-  gem.add_development_dependency 'uri'
-  gem.add_development_dependency 'json'
-  gem.add_development_dependency "rspec"
+  gem.add_dependency 'domainatrix'
+  gem.add_dependency 'nokogiri'
+  gem.add_dependency 'ruby-readability'
+  gem.add_dependency 'faraday'
+  gem.add_dependency 'faraday_middleware'
+  gem.add_dependency 'typhoeus'
+  gem.add_dependency 'uri'
+  gem.add_dependency 'json'
+  gem.add_dependency "rspec"
 end
