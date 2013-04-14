@@ -28,5 +28,6 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'typhoeus'
   gem.add_dependency 'uri'
   gem.add_dependency 'json'
+  gem.add_dependency 'hashie'
   gem.add_dependency "rspec"
 end
