@@ -53,7 +53,7 @@ module Sherlock
       @url.split(/\//).sort_by{|x| x.length}.last.titleize rescue ""
     end
 
-    #SCRAPE/CONTENT METHODS
+    #SCRAPE/CONTENT RETRIEVAL METHODS
     def links
       fetch
       if success?
@@ -170,7 +170,7 @@ module Sherlock
       if @fetched
         return @status
       else
-        #Sherlock::Client.fetch
+        Sherlock::Client.new(@uri).fetch
         @fetched = true
       end
     end

@@ -1,14 +1,27 @@
-require 'typhoeus'
 require 'faraday'
 require 'faraday_middleware'
+require 'typhoeus/adapters/faraday'
 
 module Sherlock
 
   #this should only fetch the item and return the result + status
   class Client
 
-    def self.fetch(uri)
-      connection = Faraday.new(uri) do |conn|
+    attr_accessor :uri
+    attr_reader :status,:content,:headers,:error,:request,:fetched
+
+    def initialize uri
+      @uri = uri
+      @status,@content,@headers,@error,@request,@fetched = nil
+    end
+
+    def uri=(uri)
+      @uri = uri
+      fetch
+    end
+
+    def fetch
+      connection = Faraday.new(@uri) do |conn|
         conn.use      FaradayMiddleware::FollowRedirects
         conn.adapter  :typhoeus
       end
@@ -20,10 +33,11 @@ module Sherlock
         @request = connection.head
       end
 
-      @status  = @request.try(:status)
-      @html    = @request.success? ? @request.body : nil
+      @status  = @request.status
+      @content = @request.success? ? @request.body : nil
       @headers = @request.headers
-
+      @fetched = true
+      return self
     end
 
   end

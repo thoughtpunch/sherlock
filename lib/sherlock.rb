@@ -1,7 +1,14 @@
 require "sherlock/version"
 require "sherlock/inspector"
 require "sherlock/item"
+require "sherlock/client"
 
 module Sherlock
-  # Your code goes here...
+  class << self
+
+    def inspect(uri=nil)
+      uri ? (@inspector = Sherlock::Inspector.new(uri)) : self
+    end
+
+  end
 end

@@ -24,5 +24,8 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'ruby-readability'
   gem.add_development_dependency 'faraday'
   gem.add_development_dependency 'faraday_middleware'
+  gem.add_development_dependency 'typhoeus'
+  gem.add_development_dependency 'uri'
+  gem.add_development_dependency 'json'
   gem.add_development_dependency "rspec"
 end

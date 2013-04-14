@@ -1,5 +1,6 @@
 require 'uri'
 require 'domainatrix'
+require 'sherlock/utils/uri_utils'
 
 #This is the 'Client' class. It returns basic info about a given URI
 # If it actually fetches the URI, it returns an 'Item' class
@@ -7,7 +8,7 @@ module Sherlock
   class Inspector
 
     attr_reader :uri,:status,:scheme,:fetched,:host,:domain,:path,
-                :port,:params
+                :port,:params,:client
 
     def initialize(uri)
       #validate uri and raise errors if needed
@@ -21,6 +22,7 @@ module Sherlock
       @path    ||= parsed_uri.path
       @port    ||= parse_port(@uri)
       @params  ||= parse_uri_params(@uri)
+      @client  ||= Sherlock::Client.new(@uri)
     end
 
     #Raise an error unless a valid URI
