@@ -2,6 +2,9 @@ require 'uri'
 require 'domainatrix'
 include Sherlock::Utils::URI_Utils
 
+#Decent list of URI schemes http://en.wikipedia.org/wiki/URI_scheme
+# - Scrape and put in meta lib?
+
 module Sherlock
   class Inspector
 

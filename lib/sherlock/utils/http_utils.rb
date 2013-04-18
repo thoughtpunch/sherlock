@@ -1,4 +1,5 @@
 #Utility methods for parsing and processing HTTP request/response data
+require 'json'
 require 'hashie'
 require 'faraday'
 
@@ -16,6 +17,7 @@ module Sherlock
         end
       end
 
+      #Parse the cookie and return as Hashie::Mash
       def cookie_to_mash(headers)
         if headers && headers.is_a?(Faraday::Utils::Headers)
           cookie = headers_to_mash(headers).set_cookie
@@ -27,10 +29,15 @@ module Sherlock
         end
       end
 
-      def response_to_mash(response)
+      #Parse JSON responses and return as Hashie::Mash
+      def json_response_to_mash(response)
 
       end
 
+      #Parse XML responses and return as Hashie::Mash
+      def xml_response_to_mash(response)
+
+      end
     end
   end
 end
