@@ -38,6 +38,7 @@ module Sherlock
         URI.decode(uri.to_s).downcase.strip
       end
 
+      #A Decorator for displaying URI's when the title is unknown. Looks best with HTTP URI's
       def titleize_uri(uri)
         if uri.match(/http/)
           return uri.split(/\//).sort_by{|x| x.length}.last.titleize rescue ""

@@ -1,5 +1,7 @@
 require "sherlock/version"
 require 'sherlock/utils/uri_utils'
+require 'sherlock/utils/http_utils'
+require 'sherlock/utils/string_utils'
 require "sherlock/inspector"
 require "sherlock/item"
 require "sherlock/client"

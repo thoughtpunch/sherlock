@@ -6,15 +6,16 @@ module Sherlock
 
   class Client
 
-    SUPPORTED_REQUEST_METHODS = ['GET','HEAD','TRACE','OPTIONS']
+    SUPPORTED_REQUEST_METHODS = ["get","head","options"]
 
     attr_accessor :uri,:request_method
     attr_reader :status,:content,:headers,:error,:request,:fetched
 
-    def initialize uri,request_method='get'
+    def initialize(uri,request_method="get")
       @uri = uri
       @request_method = request_method
-      @status,@content,@headers,@error,@request,@fetched = nil
+      @fetched = false
+      @status,@content,@headers,@error,@request = nil
     end
 
     def uri=(uri)
@@ -23,8 +24,18 @@ module Sherlock
     end
 
     def request_method=(request_method)
-      @request_method = request_method
-      fetch
+      if SUPPORTED_REQUEST_METHODS.include?(request_method)
+        @request_method = request_method
+        fetch
+      else
+        raise "Only the following HTTP methods are supported: 'get','head','options'"
+      end
+    end
+
+    def root_uri
+      if @request
+        return @request.env[:url].to_s
+      end
     end
 
     def fetch
@@ -34,7 +45,7 @@ module Sherlock
       end
 
       begin
-        @request = connection.get
+        @request = connection.instance_eval(@request_method)
       rescue Exception => ex 
         @error = ex
         @request = connection.head
@@ -46,13 +57,6 @@ module Sherlock
       @fetched = true
       return self
     end
-
-    # def update_uri_on_redirect
-    #   if status.redirected?
-    #     #update @uri with the real uri
-    #     p "REDIRECTED"
-    #   end
-    # end
 
   end
 

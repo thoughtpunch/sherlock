@@ -2,11 +2,10 @@ require 'uri'
 require 'domainatrix'
 require 'nokogiri'
 require 'ruby-readability'
+include Sherlock::Utils::HTTP_Utils
 
 module Sherlock
-
-
-  class Item
+  class HTTP
     EXTERNAL    = %r(\.(com|edu|gov|net|biz|org)$)
     FILES       = %r(\.(jpg|pdf|gif|mpg|png))
     META_PAGES  = %r(\/(page[s]?|about|contact|bio|tag[s]?|keywords[s]?|
@@ -14,9 +13,13 @@ module Sherlock
                         marketplace|manifesto|privacy|team|platform|
                         categor[y|ies]|author[s]?)(\/|$))
 
+    def initialize url
+      @url = url
+    end
+
     #SELF INSPECTING METHODS
     def meta_page?
-      self.url.match(META_PAGES) ? true : false
+      @url.match(META_PAGES) ? true : false
     end 
 
     def external_url?
@@ -130,13 +133,6 @@ module Sherlock
       if success? && !text.blank?
         remove_punctuation = Proc.new{|text| text.downcase.gsub(/\'|[0-9]/,"").gsub(/\W+/," ").strip}
         (@text.blank? || @text.nil?) ? remove_punctuation.call(text) : remove_punctuation.call(@text)
-      end
-    end
-
-    def root_url
-      fetch
-      if @request
-        return @request.env[:url].to_s
       end
     end
 

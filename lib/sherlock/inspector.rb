@@ -25,19 +25,25 @@ module Sherlock
 
     #STATUS METHODS
     def exists?
-      
+      if @client.status
+        !@client.status.to_s.match(/^4[0-9]{2}/) ? true : false
+      end
     end
 
     def redirected?
-      @client.status && @client.status.to_s.match(/^3[0-9]{2}/)
+      if @client.status
+        @client.status.to_s.match(/^3[0-9]{2}/) ? true : false
+      end
     end
 
     def success?
-      @client.status && @client.status.to_s.match(/^2[0-9]{2}/)
+      if @client.status
+        @client.status.to_s.match(/^2[0-9]{2}/) ? true : false
+      end
     end
 
     def fetched?
-      @client.fetched
+      @client.fetched.eql?(true) ? true : false
     end
 
   end
