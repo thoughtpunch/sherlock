@@ -2,9 +2,6 @@ require 'uri'
 require 'domainatrix'
 include Sherlock::Utils::URI_Utils
 
-#Decent list of URI schemes http://en.wikipedia.org/wiki/URI_scheme
-# - Scrape and put in meta lib?
-
 module Sherlock
   class Inspector
 
@@ -24,6 +21,7 @@ module Sherlock
       @port    ||= parse_port(@uri)
       @params  ||= parse_uri_params(@uri)
       @client  ||= Sherlock::Client.new(@uri)
+      @content ||= nil
     end
 
     #STATUS METHODS
@@ -43,6 +41,10 @@ module Sherlock
       if @client.status
         @client.status.to_s.match(/^2[0-9]{2}/) ? true : false
       end
+    end
+
+    def fetchable?
+      @scheme.downcase.to_s.match(/http/) ? true : false
     end
 
     def fetched?

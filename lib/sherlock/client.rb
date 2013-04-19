@@ -1,21 +1,21 @@
 require 'faraday'
 require 'faraday_middleware'
 require 'typhoeus/adapters/faraday'
+include Sherlock::Utils::HTTP_Utils
 
 module Sherlock
-
   class Client
 
     SUPPORTED_REQUEST_METHODS = ["get","head","options"]
 
     attr_accessor :uri,:request_method
-    attr_reader :status,:content,:headers,:error,:request,:fetched
+    attr_reader :status,:content,:headers,:error,:response,:fetched,:cookie
 
     def initialize(uri,request_method="get")
       @uri = uri
       @request_method = request_method
       @fetched = false
-      @status,@content,@headers,@error,@request = nil
+      @status,@content,@headers,@error,@response = nil
     end
 
     def uri=(uri)
@@ -33,9 +33,7 @@ module Sherlock
     end
 
     def root_uri
-      if @request
-        return @request.env[:url].to_s
-      end
+      @response.env[:url].to_s if @response
     end
 
     def fetch
@@ -45,15 +43,16 @@ module Sherlock
       end
 
       begin
-        @request = connection.instance_eval(@request_method)
+        @response = connection.instance_eval(@request_method)
       rescue Exception => ex 
         @error = ex
-        @request = connection.head
+        @response = connection.head
       end
 
-      @status  = @request.status
-      @content = @request.success? ? @request.body : nil
-      @headers = @request.headers
+      @status  = @response.status
+      @content = @response.success? ? @response.body : nil
+      @headers = header_to_mash(@response.headers)
+      @cookie  = cookie_to_mash(@response.headers)
       @fetched = true
       return self
     end

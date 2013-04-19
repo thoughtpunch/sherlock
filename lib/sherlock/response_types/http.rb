@@ -2,7 +2,6 @@ require 'uri'
 require 'domainatrix'
 require 'nokogiri'
 require 'ruby-readability'
-include Sherlock::Utils::HTTP_Utils
 include Sherlock::Utils::String_Utils
 
 module Sherlock
@@ -14,7 +13,7 @@ module Sherlock
                         marketplace|manifesto|privacy|team|platform|
                         categor[y|ies]|author[s]?)(\/|$))
 
-    def initialize(url,html)
+    def initialize(html)
       @url  = url
       @html = html
       @title,@text,@images,@links,@author,@date = nil

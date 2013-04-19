@@ -1,4 +1,5 @@
 #Utility methods for parsing and processing HTTP request/response data
+require 'time'
 require 'json'
 require 'hashie'
 require 'faraday'
@@ -11,7 +12,7 @@ module Sherlock
       # EX: header.server = 'nginx'
       def headers_to_mash(headers)
         if headers && headers.is_a?(Faraday::Utils::Headers)
-          sanitized_hash = headers.map{|k,v| {k.downcase.strip.gsub(/\W/,"_") => v.downcase}}
+          sanitized_hash = headers.map{|k,v| {k.downcase.strip.gsub(/\W/,"_").gsub(/^\_|\_$/,"").to_sym => v.downcase}}
           header_mash = sanitized_hash.reduce Hashie::Mash.new, :merge
           return header_mash
         end
@@ -23,7 +24,8 @@ module Sherlock
           cookie = headers_to_mash(headers).set_cookie
           sanitized_cookie = cookie.split(/\;/).map{|x|
             key,value = x.split("=");
-            {key.strip.to_sym => value.to_s.downcase.strip}
+            if 
+            {key.strip.gsub(/\W/,"_").gsub(/^\_|\_$/,"").to_sym => value.to_s.downcase.strip}
           }
           return sanitized_cookie.reduce Hashie::Mash.new, :merge
         end
