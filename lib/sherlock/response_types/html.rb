@@ -5,13 +5,7 @@ require 'ruby-readability'
 include Sherlock::Utils::String_Utils
 
 module Sherlock
-  class HTTP
-    EXTERNAL    = %r(\.(com|edu|gov|net|biz|org)$)
-    FILES       = %r(\.(jpg|pdf|gif|mpg|png))
-    META_PAGES  = %r(\/(page[s]?|about|contact|bio|tag[s]?|keywords[s]?|
-                        staff|people|member[s]?|course[s]?|cart|item[s]|
-                        marketplace|manifesto|privacy|team|platform|
-                        categor[y|ies]|author[s]?)(\/|$))
+  class HTML
 
     def initialize(html)
       @url  = url
@@ -19,18 +13,6 @@ module Sherlock
       @title,@text,@images,@links,@author,@date = nil
     end
 
-    #SELF INSPECTING METHODS
-    def meta_page?
-      @url.match(META_PAGES) ? true : false
-    end 
-
-    def external_url?
-      @url.match(EXTERNAL_URLS) ? true : false
-    end
-
-    def file_url?
-      @url.match(FILES) ? true : false
-    end
 
     #SCRAPE/CONTENT RETRIEVAL METHODS
     def links
