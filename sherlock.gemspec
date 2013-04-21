@@ -8,8 +8,8 @@ Gem::Specification.new do |gem|
   gem.version       = Sherlock::VERSION
   gem.authors       = ["Dan Barrett"]
   gem.email         = ["dbarrett83@gmail.com"]
-  gem.description   = %q{Sherlock: The URI Detective}
-  gem.summary       = %q{Sherlock will extract just about any information from a given URI}
+  gem.description   = %q{Sherlock: The URL Detective}
+  gem.summary       = %q{Sherlock will extract just about any information from a given HTTP URL}
   gem.homepage      = "http://mauled.by.bears"
 
   gem.files += Dir.glob("lib/**/*.rb")

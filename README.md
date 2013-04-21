@@ -1,8 +1,8 @@
 # Sherlock
 
-Sherlock is the world's best (URI) inspector.
+Sherlock is the world's best URL inspector.
 
-It will get all available data about a given URI and even fetch and scrape the content if needed.
+It will get all available data about a given URL and even fetch and process the content.
 
 ## Installation
 
@@ -16,13 +16,13 @@ Or install it yourself as:
 
 ## Usage
 
-Inspect a URI like so...
+Inspect a url like so...
 
 ```Sherlock.inspect("http://www.awesome.com")```
 
-This will return a Sherlock::Inspector object that will give you basic info about the URI
+This will return a Sherlock::Inspector object which will give you basic info about the url.
 
-Sherlock will attempt to use the lightest methods possible for extracting data first. If all you need is basic data on wether the endpoint exists, how the server responds, it will only make a TRACE request. Only if you need content from the URI will it use a GET, etc.
+Sherlock will attempt to use the lightest methods possible for extracting data first. If all you need is basic data on wether the endpoint exists, how the server responds, it will only make a OPTIONS request. Only if you need content from the url will it use a GET, etc.
 
 ## Examples
 
@@ -32,7 +32,7 @@ inspector.server = 'Apache 2.1'
 inspector.exists? = true
 inspector.headers = '{HEADERS}'
 
-**Scraping URI Content**
+**Scraping url Content**
 inspector.author = "Dan Barrett"
 inspector.title = "How to be Awesome without really trying"
 inspector.images = ['http://www.awesome.com/bears.jpg']

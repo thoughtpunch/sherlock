@@ -1,3 +1,4 @@
+#Utility methods manipulating strings
 module Sherlock
   module Utils
     module String_Utils

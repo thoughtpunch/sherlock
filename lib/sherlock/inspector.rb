@@ -1,53 +1,35 @@
 require 'uri'
 require 'domainatrix'
-include Sherlock::Utils::URI_Utils
+include Sherlock::Utils::URL_Utils
 
 module Sherlock
   class Inspector
 
-    EXTERNAL    = %r(\.(co(op|m|\.uk)?|(in(t|fo)?)|net|org|edu||mil|name|gov|arpa|biz|aero|name|pro|museum|uk|me)$)
-    FILES       = /(avi|css|doc|exe|gif|html|htm|jpg|jpeg|js|midi|mp3|mov|mpg|mpeg|pdf|png|rar|tiff|txt|wav|zip)$/i
-    META_PAGES  = %r(\/(page[s]?|about|contact|bio|tag[s]?|keywords[s]?|
-                        staff|people|member[s]?|course[s]?|cart|item[s]|
-                        marketplace|manifesto|privacy|team|platform|
-                        categor[y|ies]|author[s]?)(\/|$))
+    attr_accessor :url,:client
+    attr_reader   :scheme,:fetched,:host,:domain,:path,:port,:params
 
-    attr_reader :uri,:status,:scheme,:fetched,:host,:domain,:path,
-                :port,:params,:client
+    def initialize(url)
+      setup_inspector(url)
+    end
 
-    def initialize(uri)
-      #validate uri and raise errors if needed
-      validate_uri(uri)
-
-      @uri       = sanitize_uri(uri)
-      parsed_uri = Domainatrix.parse(@uri)
-      @scheme  ||= parsed_uri.scheme
-      @host    ||= parsed_uri.host
-      @domain  ||= parsed_uri.domain
-      @path    ||= parsed_uri.path
-      @port    ||= parse_port(@uri)
-      @params  ||= parse_uri_params(@uri)
-      @client  ||= Sherlock::Client.new(@uri)
-      @content ||= nil
+    def url=(url)
+      setup_inspector(url)
     end
 
     #STATUS METHODS
     def exists?
-      if @client.status
-        !@client.status.to_s.match(/^4[0-9]{2}/) ? true : false
-      end
+      fetch_url_with_method('head')
+      !@client.status.to_s.match(/^4[0-9]{2}/) ? true : false
     end
 
     def redirected?
-      if @client.status
-        @client.status.to_s.match(/^3[0-9]{2}/) ? true : false
-      end
+      fetch_url_with_method('head')
+      @client.status.to_s.match(/^3[0-9]{2}/) ? true : false
     end
 
     def success?
-      if @client.status
-        @client.status.to_s.match(/^2[0-9]{2}/) ? true : false
-      end
+      fetch_url_with_method('head')
+      @client.status.to_s.match(/^2[0-9]{2}/) ? true : false
     end
 
     #CURRENTLY ONLY SUPPORTING HTTP/HTTPS
@@ -59,18 +41,42 @@ module Sherlock
       @client.fetched.eql?(true) ? true : false
     end
 
-    #SELF INSPECTING METHODS
-    def meta_page?
-      @uri.match(META_PAGES) ? true : false
-    end 
-
-    def external_url?
-      @uri.match(EXTERNAL_URLS) ? true : false
+    def fetch
+      @client.fetch
+      @content = @client.content
+      return self
     end
 
-    def file_url?
-      @uri.match(FILES) ? true : false
+    private
+    def fetch_url_with_method(request_method)
+      if !fetched? && (@client.request_method != request_method)
+        @client.request_method = request_method
+      end
+      return true
     end
 
+    def setup_inspector(url)
+      validate_url(url)
+      @url       = sanitize_url(url)
+      parsed_url = Domainatrix.parse(@url)
+      @scheme    = parsed_url.scheme
+      @host      = parsed_url.host
+      @domain    = parsed_url.domain
+      @path      = parsed_url.path
+      @port      = parse_port(@url)
+      @params    = parse_url_params(@url)
+      @client    = Sherlock::Client.new(@url)
+      @content   = @client.content
+    end
+
+    def method_missing(method_name, *args, &block)
+      if @client.respond_to?(method_name)
+        return @client.send(method_name, *args, &block)
+      elsif @content.respond_to?(method_name)
+        return @content.send(method_name, *args, &block)
+      else
+        return super 
+      end
+    end
   end
 end
