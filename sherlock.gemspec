@@ -23,7 +23,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'domainatrix'
   gem.add_dependency 'nokogiri'
   gem.add_dependency 'ruby-readability'
-  gem.add_dependency 'faraday'
+  gem.add_dependency 'faraday', '0.8.9'
   gem.add_dependency 'faraday_middleware'
   gem.add_dependency 'typhoeus'
   gem.add_dependency 'uri'

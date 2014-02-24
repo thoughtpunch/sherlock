@@ -11,7 +11,7 @@ module Sherlock
     attr_accessor :url,:request_method
     attr_reader :status,:content,:headers,:error,:response,:fetched,:cookie
 
-    def initialize(url,request_method="get")
+    def initialize(url,request_method="get",params={})
       @url = url
       @request_method = request_method
       @fetched = false
@@ -46,7 +46,7 @@ module Sherlock
 
       begin
         @response = connection.instance_eval(@request_method)
-      rescue Exception => ex 
+      rescue => ex
         @error = ex
         @response = connection.head
       end
@@ -61,7 +61,8 @@ module Sherlock
 
     private
     def appropriate_content_for_type
-      case @headers.content_type 
+      p "METHODS: #{self.methods.sort - Object.methods.sort}"
+      case @headers.content_type
       when /html/i
         Sherlock::HTML.new(@url,@response.body)
       when /json/i

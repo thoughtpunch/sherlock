@@ -10,7 +10,7 @@ module Sherlock
                         staff|people|member[s]?|course[s]?|cart|item[s]|
                         marketplace|manifesto|privacy|team|platform|
                         categor[y|ies]|author[s]?)(\/|$))
-      
+
       def shortened_url?
         #TODO: Find a regex for this
         #@url.match(/\.ly)
@@ -18,7 +18,7 @@ module Sherlock
 
       def meta_page?
         @url.match(META_PAGES) ? true : false
-      end 
+      end
 
       def external_url?
         @url.match(EXTERNAL_URLS) ? true : false

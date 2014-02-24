@@ -7,7 +7,7 @@ module Sherlock
         if !(string.is_a? String)
           raise ArgumentError,"#{string} is not a valid instance of the String class"
         else
-          return string.downcase.gsub(/\'|[0-9]/,"").gsub(/\W+/," ").strip
+          return string.downcase.gsub(/\'|[0-9]/,"").gsub(/\W+|\_|\-/," ").gsub(/\s{2,}/,' ')
         end
       end
 

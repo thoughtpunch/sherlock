@@ -1,9 +1,10 @@
 require 'uri'
 require 'domainatrix'
-include Sherlock::Utils::URL_Utils
+
 
 module Sherlock
   class Inspector
+    include Sherlock::Utils::URL_Utils
 
     attr_accessor :url,:client
     attr_reader   :scheme,:fetched,:host,:domain,:path,:port,:params
@@ -75,7 +76,7 @@ module Sherlock
       elsif @content.respond_to?(method_name)
         return @content.send(method_name, *args, &block)
       else
-        return super 
+        return super
       end
     end
   end

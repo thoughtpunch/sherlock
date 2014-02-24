@@ -1,9 +1,6 @@
 Dir[File.dirname(__FILE__) + '/sherlock/utils/*.rb'].each {|file| require file }
 Dir[File.dirname(__FILE__) + '/sherlock/response_types/*.rb'].each {|file| require file }
-require "sherlock/version"
-require "sherlock/inspector"
-require "sherlock/client"
-
+Dir[File.dirname(__FILE__) + '/sherlock/*.rb'].each {|file| require file }
 
 
 module Sherlock
