@@ -13,7 +13,7 @@ module Sherlock
       end
 
       def keywords
-        dictionary = self.dictionary
+        dictionary = self.dictionary || []
         source = self.search_text.split.map{|x| x.downcase.gsub(/\W|\_|\-/," ").strip }
         source = source.delete_if{|word| word.length < 4 || word.length > 20 }
         source = source.delete_if{|word| word.match(/www|http|html|upc|gtin/i) || dictionary.include?(word)}
@@ -23,9 +23,13 @@ module Sherlock
       end
 
       def dictionary(language="english")
-        dict = DICTIONARIES.select{|x| x.match(/#{language}/i)}.first
-        words = File.open(dict,"rt").map{|l| l.downcase.strip }.sort if dict
-        return words
+        begin
+          dict = DICTIONARIES.select{|x| x.match(/#{language}/i)}.first
+          words = File.open(dict,"rt").map{|l| l.downcase.strip }.sort if dict
+          return words
+        rescue
+          []
+        end
       end
 
     end
