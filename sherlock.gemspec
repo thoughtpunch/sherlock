@@ -26,7 +26,6 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'faraday', '0.8.9'
   gem.add_dependency 'faraday_middleware'
   gem.add_dependency 'typhoeus'
-  gem.add_dependency 'uri'
   gem.add_dependency 'json'
   gem.add_dependency 'hashie'
   gem.add_dependency "rspec"
