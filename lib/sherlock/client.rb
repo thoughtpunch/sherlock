@@ -11,7 +11,7 @@ module Sherlock
     attr_accessor :url,:request_method
     attr_reader :status,:content,:headers,:error,:response,:fetched,:cookie
 
-    def initialize(url,request_method="get",params={})
+    def initialize(url,request_method="get")
       @url = url
       @request_method = request_method
       @fetched = false
